@@ -1,34 +1,101 @@
+// ignore_for_file: prefer_const_constructors, deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:flutterapi/ProductList.dart';
 
-import 'LoginFormWithValidation.dart';
+import 'AddProduct.dart';
+import 'ProductDelete.dart';
 
-void main() {
-  runApp(MyApp());
+void main() => runApp(MaterialApp(home: MyApp()));
+
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 3, 35, 61),
+      appBar: AppBar(
+        title: Text("Menu"),
+        backgroundColor: Color.fromARGB(255, 3, 35, 61),
       ),
-      home: LoginFormValidation(),
+      body: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
+                child: Center(
+                  child: Container(
+                      child: Image.asset(
+                    'assets/crud.png',
+                    height: 200,
+                  )),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 150, 184, 212),
+                    borderRadius: BorderRadius.circular(10)),
+                child: MaterialButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ProductList()));
+                  },
+                  child: Text(
+                    'Liste des Produits',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 2, 2, 2), fontSize: 20),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 150, 184, 212),
+                    borderRadius: BorderRadius.circular(10)),
+                child: MaterialButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddProduct()));
+                  },
+                  child: Text(
+                    'Ajouter Un Produit',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 2, 2, 2), fontSize: 20),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 50,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

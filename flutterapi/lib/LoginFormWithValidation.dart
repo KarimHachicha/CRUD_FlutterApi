@@ -1,16 +1,42 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, dead_code
 
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'HomePage.dart';
+
 // @dart=2.10
 class LoginFormValidation extends StatefulWidget {
-  @override
   _LoginFormValidationState createState() => _LoginFormValidationState();
 }
 
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+
 class _LoginFormValidationState extends State<LoginFormValidation> {
+  List users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    this.fetchUsers();
+  }
+
+  fetchUsers() async {
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:8000/api/user/'));
+
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      setState(() {
+        users = items;
+      });
+    } else {
+      throw Exception('Error!');
+    }
+  }
+
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   String validatePassword(String value) {
@@ -25,13 +51,13 @@ class _LoginFormValidationState extends State<LoginFormValidation> {
     }
   }
 
-  @override
   Widget build(BuildContext context) {
+    var email = users[0]['email'];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Page Authentification"),
-        backgroundColor : Color.fromARGB(255, 3, 35, 61),
+        backgroundColor: Color.fromARGB(255, 3, 35, 61),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -44,41 +70,45 @@ class _LoginFormValidationState extends State<LoginFormValidation> {
                   child: Container(
                       width: 200,
                       height: 150,
-                      child: Image.asset('assets/register2.png')),
+                      child: Image.asset('assets/register.png')),
                 ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                    controller: emailController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Votre Adresse Email',
-                        hintText: 'Enter valid email id as abc@gmail.com'),
+                        hintText: 'Exemple : user@mail.com'),
                     validator: MultiValidator([
                       RequiredValidator(errorText: "Ce champs est requis"),
-                      EmailValidator(errorText: "Le champs de l'émail est requis"),
+                      EmailValidator(
+                          errorText: "Le champs de l'émail est requis"),
                     ])),
               ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 child: TextFormField(
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Mot de passe',
-                        hintText: 'Un Mot de passe robuste'),
+                        hintText: 'Taper votre mot de passe'),
                     validator: MultiValidator([
                       RequiredValidator(errorText: "Ce champs est requis"),
                       MinLengthValidator(6,
                           errorText: "Mot de passe minimum 6"),
                       MaxLengthValidator(15,
-                          errorText:
-                          "Mot de passe maximum 15")
+                          errorText: "Mot de passe maximum 15")
                     ])
-                  //validatePassword,        //Function to check validation
-                ),
+                    //validatePassword,        //Function to check validation
+                    ),
               ),
               SizedBox(
                 height: 20,
@@ -114,13 +144,15 @@ class _LoginFormValidationState extends State<LoginFormValidation> {
                 },
                 child: Text(
                   'Mot de passe oublié?',
-                  style: TextStyle(color: Color.fromARGB(255, 3, 35, 61), fontSize: 15),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 3, 35, 61), fontSize: 15),
                 ),
               ),
               SizedBox(
                 height: 50,
               ),
-              Text('Nouveau utilisateur ? Cliquer ici')
+              Text('Nouveau utilisateur ? Cliquer ici'),
+              Text(email)
             ],
           ),
         ),

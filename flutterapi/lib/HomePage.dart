@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +20,7 @@ class _HomePageState extends State<HomePage> {
           width: 150,
           decoration: BoxDecoration(
               color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-          child: FlatButton(
+          child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
             },
